@@ -6,6 +6,7 @@ package dev.mahmoudalkayat.runnerz;
 
 import dev.mahmoudalkayat.runnerz.run.Location;
 import dev.mahmoudalkayat.runnerz.run.Run;
+import dev.mahmoudalkayat.runnerz.run.RunRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,8 @@ import org.springframework.context.annotation.Bean;
 import java.time.LocalDateTime;
 import java.time.Duration;
 
-
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "dev.mahmoudalkayat.runnerz")
+// @EnableJpaRepositories("dev.mahmoudalkayat.runnerz.run") 
 public class Application {
 
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
@@ -31,10 +32,10 @@ public class Application {
 	}
 
 	@Bean
-	CommandLineRunner runner(){
+	CommandLineRunner runner(RunRepository runRepository){
 		return args -> {
 			Run run = new Run (1,"First Run", LocalDateTime.now(), LocalDateTime.now().plus(Duration.ofHours(1)),5, Location.OUTDOOR);
-			log.info("Run: " + run);
+			runRepository.create(run);
 		};
 	}
 
